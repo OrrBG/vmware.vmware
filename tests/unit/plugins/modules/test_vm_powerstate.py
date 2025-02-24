@@ -4,11 +4,6 @@ __metaclass__ = type
 import sys
 import pytest
 
-try:
-    from pyVmomi import vmodl
-except ImportError:
-    pass
-
 from ansible_collections.vmware.vmware.plugins.modules.vm_powerstate import (
     VmPowerstateModule,
     main as module_main
@@ -18,9 +13,6 @@ from ansible_collections.vmware.vmware.plugins.module_utils.clients._pyvmomi imp
 )
 from .common.utils import (
     AnsibleExitJson, AnsibleFailJson, ModuleTestCase, set_module_args,
-)
-from .common.vmware_object_mocks import (
-    MockEsxiHost, MockVmwareObject
 )
 from ansible_collections.vmware.vmware.plugins.module_utils._vmware_tasks import RunningTaskMonitor, VmQuestionHandler
 

@@ -219,7 +219,6 @@ try:
 except ImportError:
     pass
 
-import time
 from random import randint
 from datetime import datetime
 from ansible.module_utils.basic import AnsibleModule
@@ -269,7 +268,7 @@ class VmPowerstateModule(ModulePyvmomiBase):
         if not task:
             return
         try:
-            _, task_result = RunningTaskMonitor(task).wait_for_completion(
+            succeeded, task_result = RunningTaskMonitor(task).wait_for_completion(
                 vm=self.vm, timeout=self.module.params['timeout'], answers=self.module.params.get('question_answers', None))
         except TaskError as e:
             self.module.fail_json(msg=to_text(e))
@@ -398,13 +397,13 @@ class VmPowerstateModule(ModulePyvmomiBase):
             self.module.fail_json(msg="Failed to create scheduled task %s as specifications "
                                 "given are invalid: %s" % (self.module.params.get('state'),
                                                             to_native(e.msg)))
-            
+
     def answer_questions(self):
         if not self.vm.runtime.question:
             return
         if not self.module.params['question_answers']:
             self.module.fail_json(msg="No answers provided for question %s, set answers using the question_answers option"
-                            % self.vm.runtime.question.text)    
+                            % self.vm.runtime.question.text)
         self.result['changed'] = True
         if self.module.check_mode:
             return
@@ -453,7 +452,7 @@ def main():
     )
 
     vm_powerstate = VmPowerstateModule(module)
-    vm_powerstate.standardize_folder_param() 
+    vm_powerstate.standardize_folder_param()
     vm_powerstate.answer_questions()
     if vm_powerstate.current_state == vm_powerstate.desired_state:
         module.exit_json(**vm_powerstate.result)
@@ -461,7 +460,7 @@ def main():
     if module.check_mode:
         vm_powerstate.result['changed'] = True
         module.exit_json(**vm_powerstate.result)
-    
+
     vm_powerstate.configure_vm_powerstate()
 
     module.exit_json(**vm_powerstate.result)
