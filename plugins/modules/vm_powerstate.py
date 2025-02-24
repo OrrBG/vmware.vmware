@@ -400,16 +400,18 @@ class VmPowerstateModule(ModulePyvmomiBase):
                                                             to_native(e.msg)))
             
     def answer_questions(self):
-        if self.module.check_mode or not self.vm.runtime.question:
+        if not self.vm.runtime.question:
             return
         if not self.module.params['question_answers']:
             self.module.fail_json(msg="No answers provided for question %s, set answers using the question_answers option"
                             % self.vm.runtime.question.text)    
+        self.result['changed'] = True
+        if self.module.check_mode:
+            return
         try:
             VmQuestionHandler(vm=self.vm, answers=self.module.params.get('question_answers', None)).handle_vm_questions()
         except TaskError as e:
             self.module.fail_json(msg=to_text(e))
-        self.result['changed'] = True
 
 
 def main():
