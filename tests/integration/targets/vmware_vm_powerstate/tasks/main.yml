@@ -151,7 +151,7 @@
         name: "{{ vm }}"
         state: powered-off
         scheduled_at: "{{ '%d/%m/%Y %H:%M' | strftime((ansible_date_time.epoch | int) + 86400)}}"
-        scheduled_task_name: "task_1"
+        scheduled_task_name: "task_01"
         scheduled_task_description: "Sample task to poweroff VM"
         scheduled_task_enabled: true
 
@@ -169,16 +169,29 @@
       retries: 60
       delay: 5
 
-    - name: Wait for the virtual machine to shutdown
+    - name: Shutdown virtual machine
       vmware.vmware.vm_powerstate:
         datacenter: "{{ vm_datacenter }}"
-        validate_certs: false
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         name: "{{ vm }}"
+        validate_certs: false
         state: shutdown-guest
-        timeout: 200
+
+    - name: Wait for the virtual machine to shutdown
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOff"
+      retries: 60
+      delay: 5
 
     - name: Set the state of a virtual machine to poweredon
       vmware.vmware.vm_powerstate:
