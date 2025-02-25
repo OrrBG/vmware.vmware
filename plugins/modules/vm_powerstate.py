@@ -346,7 +346,7 @@ class VmPowerstateModule(ModulePyvmomiBase):
 
     def configure_scheduled_task_spec(self, scheduled_at):
         """
-        Reurns:
+        Returns:
             ScheduledTaskSpec, object that contains all specifications regarding the scheduled task
         """
         if not self.is_vcenter():
