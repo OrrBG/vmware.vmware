@@ -172,7 +172,6 @@ EXAMPLES = r'''
     datacenter: "{{ vm_datacenter }}"
     name: "{{ guest_name }}"
     state: shutdown-guest
-    timeout: 200
   register: deploy
 
 - name: Automatically answer if a question locked a virtual machine
