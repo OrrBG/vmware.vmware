@@ -61,7 +61,7 @@ options:
         description:
             - Destination folder, absolute or relative path to find an existing guest.
             - Should be the full folder path, with or without the 'datacenter/vm/' prefix
-            - For example 'datacenter name/vm/path/to/folder' or 'path/to/folder'
+            - For example 'datacenter_name/vm/path/to/folder' or 'path/to/folder'
         type: str
         required: false
     scheduled_at:
