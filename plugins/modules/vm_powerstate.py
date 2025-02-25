@@ -273,7 +273,7 @@ class VmPowerstateModule(ModulePyvmomiBase):
         except TaskError as e:
             self.module.fail_json(msg=to_text(e))
         finally:
-                self.result['changed'] = True
+            self.result['changed'] = True
 
     def reset_vm(self):
         if self.current_state not in ('poweredon', 'poweringon', 'resetting', 'poweredoff'):
