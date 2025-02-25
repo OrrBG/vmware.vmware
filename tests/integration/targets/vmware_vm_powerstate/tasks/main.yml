@@ -52,6 +52,20 @@
         state: powered-on
       register: deploy
 
+    - name: Wait for the virtual machine to power on
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOn"
+      retries: 60
+      delay: 5
+
     - name: Restart the virtual machine
       vmware.vmware.vm_powerstate:
         datacenter: "{{ vm_datacenter }}"
@@ -62,6 +76,20 @@
         folder: "{{ vm_folder }}"
         name: "{{ vm }}"
         state: restarted
+
+    - name: Wait for the virtual machine to power on
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOn"
+      retries: 60
+      delay: 5
 
     - name: Power on a virtual machine with the question_answers param
       vmware.vmware.vm_powerstate:
@@ -77,6 +105,20 @@
             response: "button.uuid.copiedTheVM"
         state: powered-on
 
+    - name: Wait for the virtual machine to power on
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOn"
+      retries: 60
+      delay: 5
+
     - name: Set the state of a virtual machine to poweroff using MoID
       vmware.vmware.vm_powerstate:
         datacenter: "{{ vm_datacenter }}"
@@ -87,6 +129,21 @@
         folder: "{{ vm_folder }}"
         moid: "{{ deploy.vm.moid }}"
         state: powered-off
+
+    - name: Wait for the virtual machine to power off
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOff"
+      retries: 60
+      delay: 5
+
 
     - name: Set the state of a virtual machine to poweron using MoID
       vmware.vmware.vm_powerstate:
@@ -99,6 +156,20 @@
         moid: "{{ deploy.vm.moid }}"
         state: powered-on
 
+    - name: Wait for the virtual machine to power on
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOn"
+      retries: 60
+      delay: 5
+
     - name: Suspend the virtual machine
       vmware.vmware.vm_powerstate:
         datacenter: "{{ vm_datacenter }}"
@@ -109,6 +180,20 @@
         folder: "{{ vm_folder }}"
         name: "{{ vm }}"
         state: suspended
+
+    - name: Wait for the virtual machine to be suspended
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "suspended"
+      retries: 60
+      delay: 5
 
     - name: Power on the virtual machine without force
       vmware.vmware.vm_powerstate:
@@ -139,6 +224,20 @@
         name: "{{ vm }}"
         state: powered-on
         force: true
+
+    - name: Wait for the virtual machine to power on
+      community.vmware.vmware_vm_info:
+        hostname: '{{ vcenter_hostname }}'
+        username: '{{ vcenter_username }}'
+        password: '{{ vcenter_password }}'
+        vm_name: "{{ vm }}"
+        validate_certs: false
+      register: vm_info
+      until:
+        - vm_info is not failed
+        - vm_info.virtual_machines[0].power_state == "poweredOn"
+      retries: 60
+      delay: 5
 
     - name: Set the state of a virtual machine to poweroff at given scheduled time
       vmware.vmware.vm_powerstate:
